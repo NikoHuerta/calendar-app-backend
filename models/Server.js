@@ -1,5 +1,5 @@
 const express = require('express'); //minimalist web framework for Node.js applications
-// const cors = require('cors'); //CORS-> Cross-origin resource sharing (CORS) 
+const cors = require('cors'); //CORS-> Cross-origin resource sharing (CORS) 
 // const fileUpload = require('express-fileupload');
 const { createServer } = require('http');
 
@@ -43,8 +43,8 @@ class Server {
     }
 
     middlewares(){
-        // //CORS-> Cross-origin resource sharing (CORS) 
-        // this.app.use(cors());
+        //CORS-> Cross-origin resource sharing (CORS) 
+        this.app.use(cors());
 
         //Lectura y parseo del body
         this.app.use(express.json());

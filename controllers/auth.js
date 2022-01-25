@@ -60,7 +60,6 @@ const loginUsuario = async (req , res = response) => {
         }
 
         // Confirmar los password
-
         const validPassword = bcrypt.compareSync(password, usuario.password);
         if(!validPassword){
             return res.status(400).json({
@@ -88,11 +87,14 @@ const loginUsuario = async (req , res = response) => {
     }
 }
 
-const revalidarToken = (req , res = response) => {
+const revalidarToken = async (req , res = response) => {
+
+    const { uid, name } = req;
+    const token = await generarJWT(uid, name);
 
     res.json({
         ok: true,
-        msg: 'renew'
+        token
     })
 }
 
