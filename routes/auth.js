@@ -1,9 +1,9 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { crearUsuario, loginUsuario, revalidarToken } = require('../controllers/auth');
+const { loginUsuario, revalidarToken, googleSignIn } = require('../controllers/auth');
 
-const { validaCampos } = require('../middlewares/validar-campos');
+const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 
 const router = Router();
@@ -12,22 +12,19 @@ const router = Router();
     host + /api/auth
 */
 
-//Crear Usuario
-router.post('/new',[
-    check('name', 'El nombre es obligatorio').not().isEmpty(),
-    check('email', 'El email es obligatorio o invalido').isEmail(),
-    check('password', 'El password debe de ser de 6 caracteres').isLength({ min: 6 }),
-    validaCampos
-], 
-crearUsuario);
-
 //Login Usuario
 router.post('/',[
     check('email', 'El email es obligatorio o invalido').isEmail(),
     check('password', 'El password es obligatorio').isLength({ min: 6 }),
-    validaCampos
+    validarCampos
 ],
 loginUsuario);
+
+//Login User Google
+router.post('/google', [
+    check('id_token', 'El id_token es necesario').not().isEmpty(),
+    validarCampos
+], googleSignIn);
 
 //Revalidar JWT
 router.get('/renew', validarJWT, revalidarToken);
