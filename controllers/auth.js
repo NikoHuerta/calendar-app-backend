@@ -1,9 +1,7 @@
 const { response } = require('express');
 const bcrypt = require('bcryptjs');
-const { Usuario } = require('../models');
+const Usuario = require('../models/Usuario');
 const { generarJWT } = require('../helpers/jwt');
-const { googleVerify } = require("../helpers/google-verify");
-
 
 const loginUsuario = async (req , res = response) => {
 
@@ -13,18 +11,10 @@ const loginUsuario = async (req , res = response) => {
 
         let usuario = await Usuario.findOne({ email });
 
-        //VERIFICAR SI EL EMAIL EXISTE
-        if( !usuario ){
+        if( !usuario ){ //USUARIO NO EXISTE
             return res.status(400).json({
                 ok: false,
-                msg: 'Usuario / Password no son correctos -- email no esta registrado'
-            });
-        }
-
-        //VERIFICAR SI EL USUARIO ESTA ACTIVO
-        if( !usuario.status ){
-            return res.status(400).json({
-                msg: 'Usuario / Password no son correctos -- status:false'
+                msg: 'Error al logear usuario -- email no esta registrado'
             });
         }
 
@@ -33,7 +23,7 @@ const loginUsuario = async (req , res = response) => {
         if(!validPassword){
             return res.status(400).json({
                 ok: false,
-                msg: 'Usuario / Password no son correctos -- password invalida'
+                msg: 'Error al logear usuario -- password invalida'
             });
         }
 
@@ -56,13 +46,14 @@ const loginUsuario = async (req , res = response) => {
     }
 }
 
-const googleSignIn = async (req, res = response) => {
+const googleSignIn = async (req , res = response) => {
 
-    const { id_token } = req.body;   
+    const { id_token } = req.body;
+    
     try{ 
         const {name, email} = await googleVerify(id_token);
 
-        let usuario = await Usuario.findOne({email});
+        let usuario = await Usuario.findOne({correo});
 
         if(!usuario){
             //Hay que crearlo
@@ -96,12 +87,12 @@ const googleSignIn = async (req, res = response) => {
         return res.status(400).json({
             msg: 'Token de Google no válido'
         });
-    }  
+    }
 }
 
 const revalidarToken = async (req , res = response) => {
 
-    const { uid, name } = req.usuario;
+    const { uid, name } = req;
     const token = await generarJWT(uid, name);
 
     res.json({
@@ -111,7 +102,7 @@ const revalidarToken = async (req , res = response) => {
 }
 
 module.exports = {
-    loginUsuario,
-    revalidarToken,
+    loginUsuario, 
+    revalidarToken, 
     googleSignIn
 }
