@@ -4,7 +4,8 @@ const { buscar } = require('../controllers/buscar');
 const { existeColeccion , validarCampos } = require('../middlewares');
 
 /**
- *      {{url}}/api/buscar
+ *      Rutas de Busqueda
+ *      {{url}} + /api/buscar
  */
 
 

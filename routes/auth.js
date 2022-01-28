@@ -6,7 +6,7 @@ const { loginUsuario, revalidarToken, googleSignIn } = require('../controllers/a
 
 const router = Router();
 /*
-    Rutas de Usuarios / Auth
+    Rutas de Autenticacion
     {{url}} + /api/auth
 */
 

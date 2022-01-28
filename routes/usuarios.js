@@ -9,14 +9,15 @@ const { esRoleValido, emailExiste, existeUsuarioPorId } = require('../helpers/bd
 const router = Router();
 
 /*
-    Rutas de Usuarios / Auth
+    Rutas de Usuarios
     {{url}} + /api/usuarios
 */
 
+//Todas las rutan validan JWT
+router.use( validarJWT );
 
 //Crear Usuario
 router.post('/',[
-    validarJWT,
     check('name', 'El nombre es obligatorio').not().isEmpty(),
     check('password', 'El password debe de ser de 6 caracteres').isLength({ min: 6 }),
     check('email', 'El email es obligatorio o invalido').isEmail(),
@@ -28,7 +29,6 @@ crearUsuario);
 
 //Actualizar Usuario
 router.put('/:id',[
-    validarJWT,
     //check('id', 'No es un id válido').isMongoId(), --> error, unida a validacion custom existeUsuarioPorId
     check('id').custom(existeUsuarioPorId),
     check('rol').custom(esRoleValido),
@@ -38,7 +38,6 @@ updateUsuario);
 
 //Obtener Usuarios
 router.get('/',[
-    validarJWT,
     check('limit', 'El limit debe ser numerico').isNumeric().optional({nullable: true}),
     check('desde', 'Parametro desde debe ser numerico').isNumeric().optional({nullable: true}),
     validarCampos
@@ -46,7 +45,6 @@ router.get('/',[
 
 //Borrar Usuario
 router.delete('/:id',[
-    validarJWT,
     tieneRole('ADMIN_ROLE'),
     check('id').custom(existeUsuarioPorId),
     validarCampos
