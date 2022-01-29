@@ -25,8 +25,15 @@ const existeColeccion = (req, res = response, next) =>{
                 next();
             }
         });
-}
+};
+
+const resError = (req, res = response, next) => {
+    return res.status(400).json({
+        msg: `El termino de busqueda es obligatorio`
+    });
+};
 
 module.exports= {
-    existeColeccion
+    existeColeccion,
+    resError
 }

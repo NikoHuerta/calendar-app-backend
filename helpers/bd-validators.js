@@ -1,8 +1,8 @@
-const { Role, Usuario } = require('../models');
+const { Role, Usuario, Evento } = require('../models');
 
 
 
-//validadores de usuario
+//Validadores de Usuario
 const esRoleValido = async (rol = '') => {
     //Verificar que le role exista
     const existeRol = await Role.findOne({ rol });
@@ -32,8 +32,22 @@ const existeUsuarioPorId = async (_id) => {
 }
 
 
+//Validadores de Evento
+const existeEventoPorId = async (_id) => {
+    if (_id.match(/^[0-9a-fA-F]{24}$/)) {
+        const existeEvento = await Evento.findById({ _id });
+        if(!existeEvento){
+            throw new Error(`El ID ${ _id } no existe`);
+        }
+    } else {
+        throw new Error(`El ID ${ _id } no es válido`);
+    }
+}
+
+
 module.exports = {
     esRoleValido,
     emailExiste,
     existeUsuarioPorId,
+    existeEventoPorId,
 }
