@@ -13,9 +13,6 @@ const router = Router();
     {{url}} + /api/usuarios
 */
 
-//Todas las rutan validan JWT
-router.use( validarJWT );
-
 //Crear Usuario
 router.post('/',[
     check('name', 'El nombre es obligatorio').not().isEmpty(),
@@ -26,6 +23,9 @@ router.post('/',[
     validarCampos
 ], 
 crearUsuario);
+
+//Todas las rutan de abajo validan JWT
+router.use( validarJWT );
 
 //Actualizar Usuario
 router.put('/:id',[
