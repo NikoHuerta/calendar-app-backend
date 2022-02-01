@@ -24,6 +24,10 @@ const UsuarioSchema = Schema({
         type: Boolean,
         default: false,
     },
+    facebook: {
+        type: Boolean,
+        default: false,
+    },
     status: {
         type: Boolean,
         default: true,
