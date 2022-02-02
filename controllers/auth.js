@@ -45,6 +45,7 @@ const loginUsuario = async (req , res = response) => {
             ok: true,
             uid: usuario.id,
             name: usuario.name,
+            rol: usuario.rol,
             token
         });
 
@@ -161,14 +162,15 @@ const facebookSignIn = async (req, res = response) => {
 
 const revalidarToken = async (req , res = response) => {
 
-    const { _id: uid, name } = req.usuario;
+    const { _id: uid, name, rol} = req.usuario;
     const token = await generarJWT(uid, name);
 
     res.json({
         ok: true,
         token,
         uid,
-        name
+        name,
+        rol
     })
 }
 
