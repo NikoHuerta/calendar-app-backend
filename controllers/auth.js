@@ -161,12 +161,14 @@ const facebookSignIn = async (req, res = response) => {
 
 const revalidarToken = async (req , res = response) => {
 
-    const { uid, name } = req;
+    const { _id: uid, name } = req.usuario;
     const token = await generarJWT(uid, name);
 
     res.json({
         ok: true,
-        token
+        token,
+        uid,
+        name
     })
 }
 
