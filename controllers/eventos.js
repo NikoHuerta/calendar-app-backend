@@ -16,6 +16,24 @@ const obtenerEventos = async (req = request , res = response) => {
         eventos
     });
 };
+
+const obtenerEventosUsuario = async (req = request , res = response) => {
+    
+    const usuario = req.usuario.id;
+    const query = { $and: [{usuario} , { status: true }] };
+    const [total, eventos] = await Promise.all([
+        Evento.countDocuments( query ),
+        Evento.find( query )
+            .populate('usuario',['name','email'])
+    ]);
+
+    return res.status(200).json({
+        ok: true,
+        total,
+        eventos
+    });
+}
+
 const crearEvento = async (req = request , res = response) => {
 
     const evento = new Evento( req.body );
@@ -102,7 +120,8 @@ const eliminarEvento = async (req = request , res = response) => {
 
 
 module.exports = {
-    obtenerEventos, 
+    obtenerEventos,
+    obtenerEventosUsuario, 
     crearEvento, 
     actualizarEvento, 
     eliminarEvento

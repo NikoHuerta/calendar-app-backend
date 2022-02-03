@@ -1,8 +1,8 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { existeEventoPorId } = require('../helpers/bd-validators');
-const { obtenerEventos, crearEvento, actualizarEvento, eliminarEvento } = require('../controllers/eventos');
+const { existeEventoPorId, existeUsuarioPorId } = require('../helpers/bd-validators');
+const { obtenerEventosUsuario, obtenerEventos, crearEvento, actualizarEvento, eliminarEvento } = require('../controllers/eventos');
 const { validarCampos, validarJWT } = require('../middlewares');
 
 const { isDate } = require('../helpers/date-validators');
@@ -13,14 +13,21 @@ const router = Router();
     {{url}} + /api/eventos
 */
 
-//Obtener Eventos PUBLICA
+
+//Todas las rutas de abajo pasan por la validacion de JWT
+router.use( validarJWT );
+
+//Obtener Eventos  (todos)
 router.get('/', [
     validarCampos,
 ],
 obtenerEventos);
 
-//Todas las rutas de abajo pasan por la validacion de JWT
-router.use( validarJWT );
+//Obtener Eventos por Usuario
+router.get('/usuario', [
+    validarCampos
+],
+obtenerEventosUsuario)
 
 //Crear Evento
 router.post('/', [
