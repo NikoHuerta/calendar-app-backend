@@ -15,6 +15,10 @@ const googleVerify = async ( idToken = '' ) => {
 }
 
 
+// https://developers.google.com/identity/sign-in/web/backend-auth
+
+// axios to --> https://oauth2.googleapis.com/tokeninfo?id_token=XYZ123
+
 module.exports = {
     googleVerify
 }
