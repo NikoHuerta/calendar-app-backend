@@ -3,12 +3,12 @@ const validarJSON = (err, req, res, next) => {
         res.status(400);
         res.set('Content-Type', 'application/json');
         res.json({
-            message: 'JSON malformed'
+            ok: false,
+            msg: 'JSON malformed'
         });
     } else {
         next();
     }
- 
 }
  
 module.exports = {
