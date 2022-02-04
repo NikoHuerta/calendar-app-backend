@@ -69,6 +69,9 @@ class Server {
         this.app.use(this.paths.usuarios, require('../routes/usuarios'));
         this.app.use(this.paths.buscar, require('../routes/buscar'));
         this.app.use(this.paths.eventos, require('../routes/eventos'));
+        this.app.get("*" , (req, res) => {
+            res.sendFile(path.resolve(__dirname, '../public', 'index.html'));
+        });
         // this.app.use(this.paths.categorias, require('../routes/categorias'));
         // this.app.use(this.paths.productos, require('../routes/productos'));
         // this.app.use(this.paths.uploads, require('../routes/uploads'));
