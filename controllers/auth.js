@@ -60,42 +60,53 @@ const loginUsuario = async (req , res = response) => {
 
 const googleSignIn = async (req , res = response) => {
 
+    // console.log(req.body);
+
     const { id_token } = req.body;
     
     try{ 
-        const {name, email} = await googleVerify(id_token);
+        const { aud, name, email} = await googleVerify(id_token);
+        if (aud === process.env.GOOGLE_CLIENT_ID) {
+            
+            let usuario = await Usuario.findOne({ email });
 
-        let usuario = await Usuario.findOne({ email });
+            if(!usuario){
+                //Hay que crearlo
+                const data = {
+                    name,
+                    email,
+                    password: ':P',
+                    google: true
+                };
 
-        if(!usuario){
-            //Hay que crearlo
-            const data = {
-                name,
-                email,
-                password: ':P',
-                google: true
-            };
+                usuario = new Usuario(data);
+                await usuario.save();
+            }
 
-            usuario = new Usuario(data);
-            await usuario.save();
-        }
+            //si el usuario existe en DB hay que verificar su estado.
+            if(!usuario.status){
+                return res.status(401).json({
+                    ok: false,
+                    msg: 'Hable con el administrador, usuario bloqueado'
+                });
+            }
 
-        //si el usuario existe en DB hay que verificar su estado.
-        if(!usuario.status){
-            return res.status(401).json({
-                ok: false,
-                msg: 'Hable con el administrador, usuario bloqueado'
+            //GENERAR EL JWT
+            const token = await generarJWT(usuario.id);
+
+            res.json({
+                ok: true,
+                usuario,
+                token
             });
+
+
+        } else {
+           return res.status(400).json({
+                ok: false,
+                msg: 'Token de Google expirado o invalido'
+            }); 
         }
-
-        //GENERAR EL JWT
-        const token = await generarJWT(usuario.id);
-
-        res.json({
-            ok: true,
-            usuario,
-            token
-        });
 
     }catch(err){
         return res.status(400).json({
